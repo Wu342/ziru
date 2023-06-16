@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--    namesapce: 名称空间，名字-->
+<mapper namespace="com.db.mapper.AttriButeMapper">
+
+    <select id="findAttr" resultMap="attr_vaule">
+        select attr.attrId, attr.attrName, attrval.id,attrval.valueName
+        from attribute attr left join attrvalue attrval
+         on attr.attrId = attrval.attrId
+    </select>
+
+    <resultMap id="attr_vaule" type="com.db.entity.Attribute">
+        <id column="attrId" property="attrId"/>
+        <result column="attrName" property="attrName"/>
+        <collection property="attrValueList" ofType="com.db.entity.AttrValue">
+            <id property="id" column="id"/>
+            <result property="valueName" column="valueName"/>
+            <!-- 需要 查询一级属性所对应的属性，这里虽然爆红没有错误-->
+            <collection property="nameList" ofType="String" column="id" select="queryName"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="queryName" parameterType="int" resultType="String">
+        select valueName from attrvalue where valueId = #{id}
+    </select>
+
+
+</mapper>

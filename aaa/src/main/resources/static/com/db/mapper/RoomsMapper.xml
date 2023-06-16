@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--    namesapce: 名称空间，名字-->
+<mapper namespace="com.db.mapper.RoomsMapper">
+    <select id="queryRoomInfo" resultMap="queryRoomTitle_picture">
+        select * from rooms
+            left join roomtitle r on rooms.roomId = r.roomId
+            left join roompicture r2 on r.roomId = r2.roomId
+            left join users u on rooms.uid = u.uid
+                 where r.roomId = #{roomsId}
+    </select>
+    <select id="selectRoomsByCategory" resultType="com.db.entity.Rooms">
+        SELECT
+        roomId,tenementName,roomName,roomArea,houseType,orientationName,`FLOOR`,roomLocation,r
+        oomPrice,roomPic
+        FROM rooms r <where>
+        <if test="areaLocation != null and areaLocation != ''">
+            areaLocation = #{areaLocation}
+        </if>
+        <if test="tenementName != null and tenementName != ''">
+            and tenementName = #{tenementName}
+        </if>
+        <if test="roomPrice != 0 and roomPrice1 != 0">
+            and roomPrice between #{roomPrice} and #{roomPrice1}
+        </if>
+        <if test="characterName != null and characterName != ''">
+            and characterName = #{characterName}
+        </if>
+        <if test="specialOffer != null and specialOffer != ''">
+            and specialOffer = #{specialOffer}
+        </if>
+        <if test="orientationName != null and orientationName != ''">
+            and orientationName like concat(%,#{orientationName},%)
+        </if>
+        <if test="heatingType != null and heatingType != ''">
+            and heatingType = #{heatingType}
+        </if>
+        <if test="roomtime != null and roomtime != ''">
+            and roomtime = #{roomtime}
+        </if>
+        <if test="statusName != null and statusName != ''">
+            and statusName = #{statusName}
+        </if>
+        <if test="roomId != 0 and roomId != ''">
+            and r.roomId = #{roomId}
+        </if>
+        <if test="roomName != null and roomName != ''">
+            and roomName like concat(%,#{roomName},%)
+        </if>
+    </where>
+    </select>
+
+    <resultMap id="queryRoomTitle_picture" type="com.db.entity.Rooms">
+        <id property="roomId" column="roomId"/>
+        <result property="roomName" column="roomName" />
+        <result property="roomArea" column="roomArea" />
+        <result property="roomNumber" column="roomNumber" />
+        <result property="roomNumbers" column="roomNumbers" />
+        <result property="houseType" column="houseType" />
+        <result property="floor" column="floor" />
+        <result property="roomLocation" column="roomLocation" />
+        <result property="elevator" column="elevator" />
+        <result property="completion" column="completion" />
+        <result property="heatingType" column="heatingType" />
+        <result property="afforest" column="afforest" />
+        <result property="areaLocation" column="areaLocation" />
+        <result property="subway" column="subway" />
+        <result property="tenementName" column="tenementName" />
+        <result property="roomPrice" column="roomPrice" />
+        <result property="characterName" column="characterName" />
+        <result property="orientationName" column="orientationName" />
+        <result property="statusName" column="statusName" />
+        <result property="specialOffer" column="specialOffer" />
+        <result property="roomtime" column="roomtime" />
+        <result property="videoURL" column="videoURL" />
+        <result property="roomPic" column="roomPic" />
+        <result property="uid" column="uid" />
+        <collection property="roomTitle" ofType="com.db.entity.RoomTitle">
+            <id property="id" column="id"/>
+            <result property="roomId" column="roomId"/>
+            <result property="titleName" column="titleName"/>
+        </collection>
+        <collection property="roomPictures" ofType="com.db.entity.RoomPicture">
+            <id property="id" column="id"/>
+            <result property="roomId" column="roomId"/>
+            <result property="pictureURL" column="pictureURL"/>
+        </collection>
+        <collection property="users" ofType="com.db.entity.Users">
+            <id property="uid" column="uid"/>
+            <result property="uname" column="uname"/>
+            <result property="upicture" column="upicture"/>
+        </collection>
+    </resultMap>
+
+
+
+</mapper>
